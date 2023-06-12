@@ -49,7 +49,7 @@ app.post("/", function(req, res){
   const request = https.request(url, options, function (response) {
     response.on("data", function(data){
       const responseData = JSON.parse(data);
-      if (response.statusCode === 200 && responseData.error_count === 0) {
+      if (response.statusCode === 200) {
         res.redirect("/success.html");
       } else {
         res.redirect("/failure.html");
