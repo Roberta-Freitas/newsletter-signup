@@ -4,10 +4,9 @@ const bodyParser = require('body-parser');
 const axios = require('axios');
 const https = require('https');
 
-
 const app = express();
-app.use(express.static("public"))
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(express.static("public"));
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get("/", function(req, res){
   res.sendFile(__dirname + "/signup.html");
@@ -36,33 +35,32 @@ app.post("/", function(req, res){
         }
       }
     ]
-  }
+  };
 
-  const jasonData = JSON.stringify(data);
+  const jsonData = JSON.stringify(data);
 
-  const url = "https://us13.api.mailchimp.com/3.0/lists/c284beb6e7"
+  const url = "https://us13.api.mailchimp.com/3.0/lists/c284beb6e7";
 
   const options = {
     method: "POST",
     auth: "roberta11:82b4a8b99f5403cc8cc858dcc155f92a-us13"
-  }
+  };
 
   const request = https.request(url, options, function (response) {
     response.on("data", function(data){
       const responseData = JSON.parse(data);
-      if (response.statusCode === 200) {
+      if (response.statusCode === 200 && responseData.error_count === 0) {
         res.redirect("/success.html");
       } else {
         res.redirect("/failure.html");
       }
-    })
-})
-  request.write(jasonData);
+    });
+  });
+
+  request.write(jsonData);
   request.end();
-})
+});
 
-
-
-  app.listen(process.env.PORT || 3000, function () {
-    console.log("Running on localhost 3000");
-  })
+app.listen(process.env.PORT || 3000, function () {
+  console.log("Server is running...");
+});
